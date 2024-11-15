@@ -1,0 +1,55 @@
+services:
+#  frontend:
+#    build: ./frontend
+#    expose: [ 3000 ]
+#    restart: unless-stopped
+#    init: true
+#    env_file:
+#      - ./frontend/.env
+#    ports:
+#      - 443:443
+#      - 80:80
+#    volumes:
+#      - caddy_data:/data
+#      - caddy_config:/config
+
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    restart: unless-stopped
+    env_file:
+      - db.env
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "sh -c 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'"
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 2
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  backend:
+    container_name: backend
+    restart: unless-stopped
+    env_file:
+      - backend/backend.env
+    volumes:
+      - ./backend/src/logs:/backend/src/logs
+      - ./media:/backend/media
+    depends_on:
+      - postgres
+    ports:
+      - 8000:8000
+    build:
+      context: ./backend
+      dockerfile: backend/backend.dockerfile
+
+#volumes:
+#  caddy_data:
+#  caddy_config:
+#  static:
