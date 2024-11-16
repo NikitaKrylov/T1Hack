@@ -15,10 +15,10 @@ async def import_sprints_info(file: UploadFile = File(), session=Depends(get_asy
     await service.import_sprints_from_file(session, content)
 
 
-@router.post('/entities/import')
-async def import_sprint_entities(file: UploadFile = File(), session=Depends(get_async_session)):
-    content = await file.read()
-    await service.import_entities_from_file(session=session, file_content=content)
+# @router.post('/entities/import')
+# async def import_sprint_entities(file: UploadFile = File(), session=Depends(get_async_session)):
+#     content = await file.read()
+#     await service.import_entities_from_file(session=session, file_content=content)
 
 
 @router.post('/history/changes/import')

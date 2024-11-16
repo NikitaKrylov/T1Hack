@@ -29,43 +29,44 @@ class EntityOut(BaseModel):
     id: int
     entity_id: int
     sprint_id: int
-    name: str
-    area: str
-    type: str
-    status: str
-    state: str
-    priority: str
-    ticket_number: str
-    created_at: str
-    updated_at: str
-    parent_ticket_id: int | None
-    due_date: date | None
-    rank: str
-    estimation: int | None
-    workgroup: str | None
-    resolution: str | None
+    name: str | None = None
+    area: str | None = None
+    type: str | None = None
+    status: str | None = None
+    state: str | None = None
+    priority: str | None = None
+    ticket_number: str | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    parent_ticket_id: int | None = None
+    due_date: date | None = None
+    rank: str | None = None
+    estimation: int | None = None
+    workgroup: str | None = None
+    resolution: str | None = None
 
 
 class EntityCreate(BaseModel):
     entity_id: int
-    sprint_id: int | None = None
-    name: str
-    area: str
-    type: str
-    status: str
-    state: str
-    priority: str
-    ticket_number: str
-    created_at: datetime
-    updated_at: datetime
-    parent_ticket_id: int | None
-    due_date: date | None
-    rank: str
-    estimation: int | None
-    workgroup: str | None
-    resolution: str | None
+    sprint_id: int
+    name: str | None = None
+    area: str | None = None
+    type: str | None = None
+    status: str | None = None
+    state: str | None = None
+    priority: str | None = None
+    ticket_number: str | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    parent_ticket_id: int | None = None
+    due_date: date | None = None
+    rank: str | None = None
+    estimation: int | None = None
+    workgroup: str | None = None
+    resolution: str | None = None
 
 
 class EntityWithHistoryChangesOut(EntityOut):
-    changes_history: list[EntityOut]
+    # changes_history: list[EntityOut]
+    pass
 

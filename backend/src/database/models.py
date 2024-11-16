@@ -29,17 +29,17 @@ class User(Base):
     # )
 
 
-class Project(Base):
-    __tablename__ = "projects"
-
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    name: Mapped[str]
-
-    # contributors: Mapped[set[User]] = relationship(
-    #     secondary=association_table, back_populates="projects"
-    # )
-    sprints: Mapped[set['Sprint']] = relationship(back_populates='project', uselist=True)
-
+# class Project(Base):
+#     __tablename__ = "projects"
+#
+#     id: Mapped[int] = mapped_column(primary_key=True, index=True)
+#     name: Mapped[str]
+#
+#     # contributors: Mapped[set[User]] = relationship(
+#     #     secondary=association_table, back_populates="projects"
+#     # )
+#     sprints: Mapped[set['Sprint']] = relationship(back_populates='project', uselist=True)
+#
 
 class Sprint(Base):
     __tablename__ = "sprints"
@@ -48,8 +48,8 @@ class Sprint(Base):
     name: Mapped[str]
     sprint_status: Mapped[str]
 
-    project_id: Mapped[int] = mapped_column(ForeignKey('projects.id', ondelete='CASCADE'))
-    project: Mapped['Project'] = relationship(Project, uselist=False, back_populates='sprints')
+    # project_id: Mapped[int] = mapped_column(ForeignKey('projects.id', ondelete='CASCADE'))
+    # project: Mapped['Project'] = relationship(Project, uselist=False, back_populates='sprints')
 
     created_at: Mapped[datetime] = mapped_column(default=datetime.now(), server_default=func.now())
     started_at: Mapped[datetime]
@@ -67,22 +67,22 @@ class Entity(Base):
     sprint_id: Mapped[int | None] = mapped_column(ForeignKey('sprints.id', ondelete='SET NULL'))
     sprint: Mapped[Sprint] = relationship(uselist=False, back_populates='entities')
 
-    name: Mapped[str]
-    area: Mapped[str]
-    type: Mapped[str]
-    status: Mapped[str]
-    state: Mapped[str]
-    priority: Mapped[str]
-    ticket_number: Mapped[str]
-    created_at: Mapped[datetime]
+    name: Mapped[str | None]
+    area: Mapped[str | None]
+    type: Mapped[str | None]
+    status: Mapped[str | None]
+    state: Mapped[str | None]
+    priority: Mapped[str | None]
+    ticket_number: Mapped[str | None]
+    created_at: Mapped[datetime | None]
     # created_by:
-    updated_at: Mapped[datetime]
+    updated_at: Mapped[datetime | None]
     # updated_by: Mapped[]
     parent_ticket_id: Mapped[int | None]
     # assignee: Mapped[]
     # owner: Mapped[]
     due_date: Mapped[date | None]
-    rank: Mapped[str]
+    rank: Mapped[str | None]
     estimation: Mapped[int | None]
     workgroup: Mapped[str | None]
     resolution: Mapped[str | None]
