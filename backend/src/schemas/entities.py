@@ -46,6 +46,9 @@ class EntityOut(BaseModel):
     resolution: str | None = None
 
 
+class EntityUpdate(EntityOut):
+    pass
+
 class EntityCreate(BaseModel):
     entity_id: int
     sprint_id: int

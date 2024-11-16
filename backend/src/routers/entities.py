@@ -13,10 +13,10 @@ router = APIRouter(
 )
 
 
-# @router.post('/import')
-# async def import_entities(file: UploadFile = File(), session=Depends(get_async_session)):
-#     content = await file.read()
-#     await service.(session=session, file_content=content)
+@router.post('/import')
+async def import_entities(file: UploadFile = File(), session=Depends(get_async_session)):
+    content = await file.read()
+    await service.import_entities(session=session, file_content=content)
 
 
 @router.post('/list', response_model=list[EntityOut])
