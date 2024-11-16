@@ -21,7 +21,7 @@ async def import_sprints_from_file(session: AsyncSession, file_content: bytes) -
 
     for row in normalized_df.to_dict('records'):
         sprint_data = SprintCreate(**row)
-        sprint_entities = row.get('entity_ids', [])
+        sprint_entities = set(row.get('entity_ids', set()))
         db_sprint = await base_cruds.create_one(session=session, model=Sprint, response_model=SprintOut, data=sprint_data)
         blank_entities[db_sprint.id] = sprint_entities
 
@@ -37,6 +37,7 @@ async def process_sprints(df: pd.DataFrame) -> pd.DataFrame:
         'sprint_end_date': 'finished_at'
     }, inplace=True)
     df.replace({np.nan: None}, inplace=True)
+    df['entity_ids'] = df['entity_ids'].apply(lambda x: [int(i) for i in x[1:-1].split(',')])
     return df
 
 

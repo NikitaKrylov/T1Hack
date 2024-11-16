@@ -55,17 +55,14 @@ class Sprint(Base):
     started_at: Mapped[datetime]
     finished_at: Mapped[datetime]
 
-    entities: Mapped[set['Entity']] = relationship(back_populates='sprint', uselist=True)
-
 
 class Entity(Base):
     __tablename__ = "entities"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
-    entity_id: Mapped[int] = mapped_column(primary_key=True, index=True, unique=True)
+    entity_id: Mapped[int]
 
-    sprint_id: Mapped[int | None] = mapped_column(ForeignKey('sprints.id', ondelete='SET NULL'))
-    sprint: Mapped[Sprint] = relationship(uselist=False, back_populates='entities')
+    sprint_id: Mapped[int | None]
 
     name: Mapped[str | None]
     area: Mapped[str | None]
@@ -87,15 +84,12 @@ class Entity(Base):
     workgroup: Mapped[str | None]
     resolution: Mapped[str | None]
 
-    changes_history: Mapped[set['EntityChanging']] = relationship(back_populates='entity', uselist=True)
-
 
 class EntityChanging(Base):
     __tablename__ = "entities_changing"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    entity_id: Mapped[int | None] = mapped_column(ForeignKey('entities.entity_id', ondelete='SET NULL'), nullable=True)
-    entity: Mapped[Entity | None] = relationship(back_populates='changes_history', uselist=False)
+    entity_id: Mapped[int | None]
 
     property_name: Mapped[str] = mapped_column(index=True)
     date: Mapped[datetime]
