@@ -1,17 +1,7 @@
 from datetime import datetime, date
-
 from sqlalchemy import func, ForeignKey, Table, Column
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from src.database.db import Base
-
-
-# association_table = Table(
-#     "users_in_projects",
-#     Base.metadata,
-#     Column("user_id", ForeignKey("users.id"), primary_key=True),
-#     Column("project_id", ForeignKey("projects.id"), primary_key=True),
-# )
 
 
 class User(Base):
@@ -29,17 +19,15 @@ class User(Base):
     # )
 
 
-# class Project(Base):
-#     __tablename__ = "projects"
-#
-#     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-#     name: Mapped[str]
-#
-#     # contributors: Mapped[set[User]] = relationship(
-#     #     secondary=association_table, back_populates="projects"
-#     # )
-#     sprints: Mapped[set['Sprint']] = relationship(back_populates='project', uselist=True)
-#
+class Project(Base):
+    __tablename__ = "projects"
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    name: Mapped[str]
+    owner_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'), index=True)
+
+    # sprints: Mapped[set['Sprint']] = relationship(back_populates='project', uselist=True)
+
 
 class Sprint(Base):
     __tablename__ = "sprints"
