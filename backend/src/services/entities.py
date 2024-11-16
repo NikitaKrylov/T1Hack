@@ -22,20 +22,7 @@ async def process_entities(df: pd.DataFrame) -> pd.DataFrame:
         'update_date': 'updated_at',
     }, inplace=True)
     df['created_at'] = pd.to_datetime(df['created_at'], format='%Y-%m-%d %H:%M:%S.%f')
-    # df['created_at'] = df['created_at'].apply(lambda x: x.to_pydatetime())
     return df
-#
-#
-# async def import_entities_from_file(session: AsyncSession, file_content: bytes) -> None:
-#     df = file_to_pandas_dataframe(file_content, skip_rows=1)
-#     normalized_df = await process_entities(df)
-#     new_entities = [EntityCreate(**i) for i in normalized_df.to_dict('records')]
-#     await create_entities(session, new_entities)
-#
-#
-#
-# async def create_entities(session: AsyncSession, entities: list[EntityCreate]) -> None:
-#     await crud.create_all(session, model=Entity, data=entities)
 
 
 async def import_entities(session: AsyncSession, file_content: bytes) -> None:

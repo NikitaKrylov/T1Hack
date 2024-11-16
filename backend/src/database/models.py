@@ -36,9 +36,6 @@ class Sprint(Base):
     name: Mapped[str]
     sprint_status: Mapped[str]
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'), index=True)
-    # project_id: Mapped[int] = mapped_column(ForeignKey('projects.id', ondelete='CASCADE'))
-    # project: Mapped['Project'] = relationship(Project, uselist=False, back_populates='sprints')
-
     created_at: Mapped[datetime] = mapped_column(default=datetime.now(), server_default=func.now())
     started_at: Mapped[datetime]
     finished_at: Mapped[datetime]
@@ -60,12 +57,12 @@ class Entity(Base):
     priority: Mapped[str | None]
     ticket_number: Mapped[str | None]
     created_at: Mapped[datetime | None]
-    # created_by:
+    created_by: Mapped[str | None]
     updated_at: Mapped[datetime | None]
-    # updated_by: Mapped[]
+    updated_by: Mapped[str | None]
     parent_ticket_id: Mapped[int | None]
-    # assignee: Mapped[]
-    # owner: Mapped[]
+    assignee: Mapped[str | None]
+    owner: Mapped[str | None]
     due_date: Mapped[date | None]
     rank: Mapped[str | None]
     estimation: Mapped[int | None]

@@ -44,10 +44,15 @@ class EntityOut(BaseModel):
     estimation: int | None = None
     workgroup: str | None = None
     resolution: str | None = None
+    created_by: str | None = None
+    updated_by: str | None = None
+    assignee: str | None = None
+    owner: str | None = None
 
 
 class EntityUpdate(EntityOut):
     pass
+
 
 class EntityCreate(BaseModel):
     entity_id: int
@@ -67,6 +72,10 @@ class EntityCreate(BaseModel):
     estimation: int | None = None
     workgroup: str | None = None
     resolution: str | None = None
+    created_by: str | None = None
+    updated_by: str | None = None
+    assignee: str | None = None
+    owner: str | None = None
 
 
 class EntityWithHistoryChangesOut(EntityOut):
