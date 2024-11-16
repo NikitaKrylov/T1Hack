@@ -1,4 +1,6 @@
 from abc import ABC
+from datetime import date
+
 from pydantic import BaseModel
 
 class BaseFilter(ABC):
@@ -19,3 +21,12 @@ class PagingFilter(BaseFilter, BaseModel):
             query = query.limit(self.limit)
 
         return query
+
+
+class DateIntervalFilter(BaseFilter, BaseModel):
+    from_date: date
+    to_date: date
+
+    # def __call__(self, query, *args, **kwargs):
+
+
