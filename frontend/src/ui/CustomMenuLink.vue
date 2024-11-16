@@ -1,7 +1,7 @@
 <template>
     <router-link :to="to" :class="['link', isActive && 'active']" v-bind="filteredProps">
         <CustomIcon :class="icon" :id="icon" :width="32" :height="32" />
-        <span :class="'text'">{{ text }}</span>
+        <span class="text">{{ text }}</span>
     </router-link>
 </template>
 
@@ -9,7 +9,6 @@
 import { computed, defineProps, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
 import CustomIcon from '@/ui/CustomIcon.vue';
-import { useRoleStore } from '@/store/useRoleStore';
 
 interface LinkProps {
     icon: string;
@@ -19,8 +18,7 @@ interface LinkProps {
 
 const props = defineProps<LinkProps>();
 const { to, icon, text } = toRefs(props);
-const roleStore = useRoleStore();
-// Filter out props for the router link
+
 const filteredProps = computed(() => {
     const { to, icon, text, ...rest } = props; // Exclude `to`, `icon`, and `text` from `props`
     return rest;
@@ -33,15 +31,17 @@ const isActive = computed(() => route.path.includes(to.value));
 
 <style scoped lang="scss">
 .link {
-    width: 49px;
-    height: 49px;
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    gap: 2px;
-    color: rgba(28, 39, 76, 0.5); /* Default color for the link */
+    flex-direction: row;
+    padding: 12px 16px;
     align-items: center;
+    gap: 12px;
+    border-radius: 12px;
+
     user-select: none;
     outline: none;
+    color: var(--color-base-875, #202220);
     --webkit-tap-highlight-color: transparent;
     --webkit-user-select: none;
     --moz-user-select: none;
@@ -49,14 +49,11 @@ const isActive = computed(() => route.path.includes(to.value));
     --o-user-select: none;
     --user-select: none;
     cursor: pointer;
-    &:focus,
-    &:active {
-        background-color: transparent;
-        outline: none;
-    }
-    .active {
-        color: #1c274c; /* Active link color */
-    }
+    // &:focus,
+    // &:active {
+    //     background-color: transparent;
+    //     outline: none;
+    // }
 
     .icon {
         display: block;
@@ -66,13 +63,18 @@ const isActive = computed(() => route.path.includes(to.value));
     }
 }
 .text {
-    font-family: var(--font-main);
-    font-weight: 700;
-    font-size: 12px;
+    color: var(--color-base-875, #202220);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
     line-height: normal;
-    transition: color 0.2s ease;
 }
 .active {
-    color: #1c274c; /* Active link color */
+    color: var(--color-base-0, #fff); /* Active link color */
+    background: #45a3fa;
+    .text{
+        color: var(--color-base-0, #fff); /* Active link color */
+    }
 }
 </style>
