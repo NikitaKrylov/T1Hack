@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from jose import JWTError, jwt, ExpiredSignatureError
 from fastapi import HTTPException, status, Depends
 import src.params.auth as auth
+from src.database.cruds import base as base_cruds
 from src.database.db import async_session
 from src.database.models import User
 from src.schemas.users import UserOut, UserCreate
@@ -50,10 +51,10 @@ async def register_user(user: UserCreate) -> UserOut:
     hashed_password = hash_password(user.password)
     user.password = hashed_password
     async with async_session() as session:
-        existed_user = await base_db.get_by(session, User, (User.email == user.email), UserOut)
+        existed_user = await base_cruds.get_by(session, User, (User.email == user.email), UserOut)
         if existed_user:
             raise HTTPException(status.HTTP_400_BAD_REQUEST, 'Пользователь с таким логином уже существует')
-        return await base_db.create_one(session, User, user, UserOut)
+        return await base_cruds.create_one(session, User, user, UserOut)
 
 
 async def create_access_token(data: dict):
@@ -99,7 +100,7 @@ async def get_current_user(token: str = Depends(auth.oauth2_scheme)) -> UserOut:
     user_id = verify_access_token(token, credentials_exception)
 
     async with async_session() as session:
-        user = await base_db.get_one_or_none_by_id(session, User, user_id, UserOut)
+        user = await base_cruds.get_one_or_none_by_id(session, User, user_id, UserOut)
 
         if user is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -109,15 +110,15 @@ async def get_current_user(token: str = Depends(auth.oauth2_scheme)) -> UserOut:
 
 async def get_users_list() -> list[UserOut]:
     async with async_session() as session:
-        return await base_db.get_all(session, User, UserOut)
+        return await base_cruds.get_all(session, User, UserOut)
 
 
 async def get_user_by_id(user_id: int) -> UserOut | None:
     async with async_session() as session:
-        return await base_db.get_one_or_none_by_id(session, User, user_id, UserOut)
+        return await base_cruds.get_one_or_none_by_id(session, User, user_id, UserOut)
 
 
 async def delete_users(user_id: int) -> None:
     async with async_session() as session:
-        await base_db.delete_by_id(session, User, user_id)
+        await base_cruds.delete_by_id(session, User, user_id)
 
