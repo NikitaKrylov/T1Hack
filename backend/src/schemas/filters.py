@@ -1,5 +1,5 @@
 from abc import ABC
-
+from pydantic import BaseModel
 
 class BaseFilter(ABC):
 
@@ -7,7 +7,7 @@ class BaseFilter(ABC):
         raise NotImplementedError
 
 
-class PagingFilter(BaseFilter):
+class PagingFilter(BaseFilter, BaseModel):
     limit: int | None = None
     offset: int | None = None
 
