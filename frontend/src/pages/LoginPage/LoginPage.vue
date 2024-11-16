@@ -8,7 +8,7 @@
             </div>
             <div class="toolbar">
                 <div class="wrapBtn">
-                    <MainButton text="Войти" type="base" />
+                    <MainButton text="Войти" type="primary" />
                     <p>{{ fetchError }}</p>
                 </div>
                 <p class="forgot">Забыли пароль?</p>

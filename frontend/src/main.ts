@@ -6,18 +6,15 @@ import GlobalAuth from './pages/GlobalAuth.vue';
 import { createPinia } from 'pinia';
 
 import MainLayout from './layouts/MainLayout.vue';
-import MainPatientPage from './pages/PatientFlow/MainPatientPage.vue';
 import ErrorPage from './pages/ErrorPage.vue';
-import AllChatsPage from './pages/ChatsPage/AllChatsPage.vue';
-import ChatPage from './pages/ChatsPage/ChatPage.vue';
 import FolderPage from './pages/PatientFlow/FolderPage/FolderPage.vue';
 import HistoryPage from './pages/PatientFlow/HistoryPage/HistoryPage.vue';
 import AiChatPage from './pages/AiChatPage/AiChatPage.vue';
 import SettingsPage from './pages/SettingsPage/SettingsPage.vue';
-import ScanReportPage from './pages/ScanReportPage/ScanReportPage.vue';
 import AllDoctorsPage from './pages/PatientFlow/AllDoctorsPage/AllDoctorsPage.vue';
 import path from 'path';
 import LoginPage from './pages/LoginPage/LoginPage.vue';
+import HomePage from './pages/HomePage/HomePage.vue';
 
 const routes = [
     // {
@@ -31,9 +28,6 @@ const routes = [
     //     children: [{ path: '', component: MainPatientPage }],
     // },
     { path: '/:catchAll(.*)', component: ErrorPage },
-    { path: '/patient/chats', component: MainLayout, children: [{ path: '', component: AllChatsPage }] },
-    { path: '/doctor/chats', component: MainLayout, children: [{ path: '', component: AllChatsPage }] },
-    { path: '/chat/:id', component: ChatPage },
     {
         path: '/patient/folder/:id',
         name: 'FolderPage',
@@ -43,9 +37,9 @@ const routes = [
     { path: '/patient/history', component: MainLayout, children: [{ path: '', component: HistoryPage }] },
     { path: '/ai_chat', component: MainLayout, children: [{ path: '', component: AiChatPage }] }, 
     { path: '/settings', component: MainLayout, children: [{ path: '', component: SettingsPage }] },
-    { path: '/scanReport', component: ScanReportPage },
     { path: '/allDoctors', component: AllDoctorsPage },
-    { path: '/login', component: LoginPage}
+    { path: '/login', component: LoginPage},
+    { path: '/', component: MainLayout, children: [{ path: '', component: HomePage }] },
 ];
 
 const router = createRouter({

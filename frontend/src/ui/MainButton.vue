@@ -10,7 +10,7 @@ defineOptions({
 });
 import { computed } from 'vue';
 
-const { type = 'base' } = defineProps<{ text: string; type?: 'base' | 'secondary' }>();
+const { type = 'primary' } = defineProps<{ text: string; type?: 'primary' | 'secondary' }>();
 
 const buttonClass = computed(() => ['btn', { 'btn--secondary': type === 'secondary' }]);
 </script>

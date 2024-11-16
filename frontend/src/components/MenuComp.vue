@@ -22,7 +22,7 @@ const router = useRouter();
 
 <style lang="scss">
 .menu {
-    width: 100%;
+    width: 240px;
 
     position: fixed;
     bottom: 0;

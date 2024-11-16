@@ -1,20 +1,17 @@
 <template>
-    <div :class="{ mainLayout: applyStyle }">
-        <div class="load" v-if="isLoading">
-            <CustomIcon id="logo" :width="207" :height="33" className="logo" />
-            <h1 v-if="isLoading && userStore.user">
-                Привет, <span>{{ userStore.user?.first_name }}</span>
-            </h1>
-        </div>
-        <template v-else-if="!isLoading && !errorTxt && userStore.user">
-            <HeaderComp v-if="!isChats && !isAiChat" />
-            <router-view />
-            <MenuComp v-if="!isAiChat" />
-        </template>
-        <div class="error" v-else>
-            <h1>{{ errorTxt }}</h1>
-            <button @click="goBack">Вернуться назад</button>
-        </div>
+    <div class="load" v-if="isLoading">
+        <CustomIcon id="logo" :width="207" :height="33" className="logo" />
+        <h1 v-if="isLoading && userStore.user">
+            Привет, <span>{{ userStore.user?.first_name }}</span>
+        </h1>
+    </div>
+    <div class="mainLayout" v-else-if="!isLoading && !errorTxt && userStore.user">
+        <MenuComp v-if="!isAiChat" />
+        <router-view />
+    </div>
+    <div class="error" v-else>
+        <h1>{{ errorTxt }}</h1>
+        <button @click="goBack">Вернуться назад</button>
     </div>
 </template>
 
@@ -28,7 +25,6 @@ import api from '@/axios/api';
 import { Doctor, Folder, Patient, useUserStore } from '@/store/useUserStore';
 import { useRoute, useRouter } from 'vue-router';
 import MenuComp from '@/components/MenuComp.vue';
-import HeaderComp from '@/components/HeaderComp.vue';
 import { useRoleStore } from '@/store/useRoleStore';
 import { useScansStore } from '@/store/useScansStore';
 const route = useRoute();
