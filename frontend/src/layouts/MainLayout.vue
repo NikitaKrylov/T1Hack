@@ -5,7 +5,7 @@
             Привет, <span>{{ userStore.user?.first_name }}</span>
         </h1>
     </div>
-    <div class="mainLayout" v-else-if="!isLoading && !errorTxt && userStore.user">
+    <div class="mainLayout" v-else-if="!isLoading">
         <MenuComp v-if="!isAiChat" />
         <router-view />
     </div>
@@ -21,7 +21,6 @@ defineOptions({
 });
 import CustomIcon from '@/ui/CustomIcon.vue';
 import { computed, onMounted, ref, toRaw, watch } from 'vue';
-import api from '@/axios/api';
 import { Doctor, Folder, Patient, useUserStore } from '@/store/useUserStore';
 import { useRoute, useRouter } from 'vue-router';
 import MenuComp from '@/components/MenuComp.vue';
@@ -38,32 +37,7 @@ const router = useRouter();
 const roleStore = useRoleStore();
 const errorTxt = ref<string | null>(null);
 const scansStore = useScansStore();
-const fetchUser = async () => {
-    if (roleStore.role === 'patient') {
-        try {
-            const response = await api.getData<Patient>('/user/get_me');
-            userStore.setUser(response);
-            console.log(response); // Для отладки
-            if (response.role === 'user' && !window.location.href.includes('/patient/home')) {
-                router.push('/patient/home');
-            }
-        } catch (error: any) {
-            console.log(error.response.data.detail);
-            errorTxt.value = error.response.data.detail;
-        }
-    } else if (roleStore.role === 'doctor') {
-        try {
-            const response = await api.getData<Doctor>('/doctor/get_me');
-            userStore.setUser(response);
-            if (response.role === 'doctor' && !window.location.href.includes('/chats')) {
-                router.push('/doctor/chats');
-            }
-        } catch (error: any) {
-            console.log(error.response.data.detail);
-            errorTxt.value = error.response.data.detail;
-        }
-    }
-};
+
 watch(
     () => scansStore.folders,
     (newFolders) => {
@@ -71,25 +45,8 @@ watch(
     },
     { immediate: true },
 );
-const fetchFolders = async () => {
-    if (roleStore.role === 'patient') {
-        try {
-            const response = await api.getData<Folder[]>('/scan/get_folders');
-            console.log(response);
 
-            if (response) {
-                scansStore.setFolders(response);
-            }
-            console.log('folders', toRaw(scansStore.folders));
-        } catch (error: any) {
-            console.log(error.response.data.detail);
-            errorTxt.value = error.response.data.detail;
-        }
-    }
-};
 onMounted(async () => {
-    await fetchUser();
-    await fetchFolders();
 });
 
 const goBack = () => {
@@ -104,12 +61,16 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .mainLayout {
+    padding: 0; 
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     height: 100dvh;
-    padding: 65px 20px 72px 20px;
+    display: flex;
+    flex-direction: row;
+    gap:20px;
+    align-items: center;
+    
+    padding: 40px;
+    background-color: #F0F2F0;
 }
 .load {
     width: 100%;

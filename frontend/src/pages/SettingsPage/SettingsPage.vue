@@ -16,7 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import api from '@/axios/api';
 import { Doctor, Patient, useUserStore } from '@/store/useUserStore';
 import CustomDropDown from '@/ui/CustomDropDown.vue';
 import CustomInput from '@/ui/CustomInput.vue';
@@ -65,14 +64,14 @@ const updateProfile = async () => {
             ...user.value,
             skin_type: user.value.skin_type || '', // Ensure skin_type is sent as a string
         };
-        response = await api.postData<UserPayload, ResponseData>('/user/update_profile', toRaw(payload));
+        // response = await api.postData<UserPayload, ResponseData>('/user/update_profile', toRaw(payload));
     } else {
-        response = await api.postData<UserPayload, ResponseData>('/doctor/update_profile', user.value);
+        // response = await api.postData<UserPayload, ResponseData>('/doctor/update_profile', user.value);
     }
 
-    if (response) {
-        resp.value = response.detail; // Assuming `detail` is the desired string
-    }
+    // if (response) {
+    //     resp.value = response.detail; // Assuming `detail` is the desired string
+    // }
 };
 
 const saveUser = () => {

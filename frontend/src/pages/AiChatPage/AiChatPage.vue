@@ -24,7 +24,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import api from '@/axios/api';
+
 import CustomIcon from '@/ui/CustomIcon.vue';
 import { formatDate } from '@/utils/fortmatDate';
 import { ref, onMounted, onBeforeUnmount, Ref } from 'vue';
@@ -51,54 +51,54 @@ const newMessage = ref('');
 const messages: Ref<ChatMessage[]> = ref([]);
 
 const getMessages = async () => {
-    try {
-        const response = await api.getData<AiMessage[]>('/ai_chat/get_history');
-        if (response) {
-            for (let i = 0; i < response.length; i++) {
-                const messagePair = response[i];
-                const userMessage: ChatMessage = {
-                    sender: 'user',
-                    text: messagePair.content, // Используем обработанный текст
-                    created_at: new Date(new Date(messagePair.created_at).getTime() + 3 * 60 * 60 * 1000).toISOString(),
-                };
-                messages.value.push(userMessage);
-                const botMessage: ChatMessage = {
-                    sender: 'bot',
-                    text: messagePair.ai_answer, // Используем обработанный текст
-                    created_at: new Date(new Date(messagePair.created_at).getTime() + 3 * 60 * 60 * 1000).toISOString(),
-                };
-                messages.value.push(botMessage);
-            }
-        }
-    } catch (error) {
-        console.error('Ошибка при получении сообщений:', error);
-    }
+    // try {
+    //     const response = await api.getData<AiMessage[]>('/ai_chat/get_history');
+    //     if (response) {
+    //         for (let i = 0; i < response.length; i++) {
+    //             const messagePair = response[i];
+    //             const userMessage: ChatMessage = {
+    //                 sender: 'user',
+    //                 text: messagePair.content, // Используем обработанный текст
+    //                 created_at: new Date(new Date(messagePair.created_at).getTime() + 3 * 60 * 60 * 1000).toISOString(),
+    //             };
+    //             messages.value.push(userMessage);
+    //             const botMessage: ChatMessage = {
+    //                 sender: 'bot',
+    //                 text: messagePair.ai_answer, // Используем обработанный текст
+    //                 created_at: new Date(new Date(messagePair.created_at).getTime() + 3 * 60 * 60 * 1000).toISOString(),
+    //             };
+    //             messages.value.push(botMessage);
+    //         }
+    //     }
+    // } catch (error) {
+    //     console.error('Ошибка при получении сообщений:', error);
+    // }
 };
 
 // Функция для отправки нового сообщения
 const sendMessage = async () => {
-    if (!newMessage.value.trim()) return; // Проверка, что сообщение не пустое
+    // if (!newMessage.value.trim()) return; // Проверка, что сообщение не пустое
 
-    const userMessage: ChatMessage = { sender: 'user', text: newMessage.value, created_at: new Date().toUTCString() };
-    // Добавляем сообщение пользователя в чат (локально)
-    messages.value.push(userMessage);
-    console.log(newMessage.value);
-    try {
-        // Отправка сообщения на сервер
-        const response = await api.postData<{ content: string }, AiMessage>('/ai_chat/send', { content: newMessage.value });
+    // const userMessage: ChatMessage = { sender: 'user', text: newMessage.value, created_at: new Date().toUTCString() };
+    // // Добавляем сообщение пользователя в чат (локально)
+    // messages.value.push(userMessage);
+    // console.log(newMessage.value);
+    // try {
+    //     // Отправка сообщения на сервер
+    //     const response = await api.postData<{ content: string }, AiMessage>('/ai_chat/send', { content: newMessage.value });
 
-        const botMessage: ChatMessage = {
-            sender: 'bot',
-            text: response.ai_answer, // Используем обработанный текст
-            created_at: new Date(new Date(response.created_at).getTime() + 3 * 60 * 60 * 1000).toISOString(),
-        };
-        messages.value.push(botMessage);
-    } catch (error) {
-        console.error('Ошибка при отправке сообщения:', error);
-    } finally {
-        // Очистка поля ввода
-        newMessage.value = '';
-    }
+    //     const botMessage: ChatMessage = {
+    //         sender: 'bot',
+    //         text: response.ai_answer, // Используем обработанный текст
+    //         created_at: new Date(new Date(response.created_at).getTime() + 3 * 60 * 60 * 1000).toISOString(),
+    //     };
+    //     messages.value.push(botMessage);
+    // } catch (error) {
+    //     console.error('Ошибка при отправке сообщения:', error);
+    // } finally {
+    //     // Очистка поля ввода
+    //     newMessage.value = '';
+    // }
 };
 onMounted(getMessages);
 function goBack() {
