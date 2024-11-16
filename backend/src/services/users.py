@@ -5,7 +5,7 @@ import src.params.auth as auth
 from src.database.db import async_session
 from src.database.models import User
 from src.schemas.users import UserOut, UserCreate
-from src.database import users, base_db
+from src.database.cruds import users
 
 
 def hash_password(password: str) -> str:
