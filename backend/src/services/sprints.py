@@ -9,6 +9,7 @@ from src.database.cruds import sprints as sprints_cruds
 from src.database.cruds import entities as entities_cruds
 from src.database.models import Entity, Sprint
 from src.schemas.entities import EntityCreate
+from src.schemas.filters import PagingFilter
 from src.schemas.sprints import SprintCreate, SprintOut
 from src.services.base import file_to_pandas_dataframe
 
@@ -43,6 +44,10 @@ async def process_sprints(df: pd.DataFrame) -> pd.DataFrame:
 
 async def create_sprints(session: AsyncSession, sprints: list[SprintCreate]) -> None:
     await base_cruds.create_all(session, model=Sprint, data=sprints)
+
+
+async def get_sprints_list(session: AsyncSession, paging: PagingFilter | None = None) -> list[SprintOut]:
+    return await base_cruds.get_all(session=session, model=Sprint, response_model=SprintOut, paging=paging)
 
 
 
