@@ -14,7 +14,7 @@ from src.schemas.sprints import SprintCreate, SprintOut
 from src.services.base import file_to_pandas_dataframe
 
 
-async def import_sprints_from_file(session: AsyncSession, file_content: bytes) -> None:
+async def import_sprints_from_file(session: AsyncSession, file_content: bytes, user_id: int) -> None:
     df = file_to_pandas_dataframe(file_content, skip_rows=1)
     normalized_df = await process_sprints(df)
 
@@ -38,7 +38,7 @@ async def import_sprints_from_file(session: AsyncSession, file_content: bytes) -
     for row in normalized_df.to_dict('records'):
         sprint_data = SprintCreate(**row)
         sprint_entities = set(row.get('entity_ids', set()))
-        db_sprint = await base_cruds.create_one(session=session, model=Sprint, response_model=SprintOut, data=sprint_data)
+        db_sprint = await base_cruds.create_one(session=session, model=Sprint, response_model=SprintOut, data=sprint_data, user_id=user_id)
         blank_entities[db_sprint.id] = sprint_entities
 
     #TODO проверять дупликаты

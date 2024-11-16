@@ -35,7 +35,7 @@ class Sprint(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
     name: Mapped[str]
     sprint_status: Mapped[str]
-
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'), index=True)
     # project_id: Mapped[int] = mapped_column(ForeignKey('projects.id', ondelete='CASCADE'))
     # project: Mapped['Project'] = relationship(Project, uselist=False, back_populates='sprints')
 
