@@ -77,14 +77,13 @@ class EntityChanging(Base):
     __tablename__ = "entities_changing"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    entity_id: Mapped[int | None]
+    entity_id: Mapped[int]
 
-    property_name: Mapped[str] = mapped_column(index=True)
-    date: Mapped[datetime]
-    version: Mapped[int]
-    change_type: Mapped[str]
-    changed_from: Mapped[str | None]
-    changed_to: Mapped[str | None]
+    property_name: Mapped[str | None] = mapped_column(index=True)
+    date: Mapped[datetime | None]
+    version: Mapped[int | None]
+    change_type: Mapped[str | None]
+    history_change: Mapped[str | None]
 
 
 

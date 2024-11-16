@@ -5,6 +5,7 @@ from src.routers.users import router as users_router
 from src.routers.sprints import router as sprints_router
 from src.routers.entities import router as entities_router
 from src.routers.projects import router as projects_router
+from src.routers.history import router as history_router
 from src.params.config import config
 
 
@@ -30,6 +31,7 @@ app.include_router(users_router)
 app.include_router(projects_router)
 app.include_router(sprints_router)
 app.include_router(entities_router)
+app.include_router(history_router)
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8000)
