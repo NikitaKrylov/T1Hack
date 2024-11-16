@@ -18,6 +18,21 @@ async def import_sprints_from_file(session: AsyncSession, file_content: bytes) -
     df = file_to_pandas_dataframe(file_content, skip_rows=1)
     normalized_df = await process_sprints(df)
 
+    if normalized_df.empty:
+        return
+
+    db_sprints = await get_sprints_list(session)
+    db_sprints_df = pd.DataFrame([i.model_dump() for i in db_sprints], columns=list(SprintOut.model_fields.keys()))
+
+    merged = pd.merge(normalized_df, db_sprints_df, how='outer', on='name', indicator=True, suffixes=[None, '__db'])
+    to_create_sprints = merged[merged['_merge'] == 'left_only']
+    to_create_sprints.drop(columns=['_merge'], inplace=True)
+    to_create_sprints.drop(columns=[i for i in to_create_sprints.columns.tolist() if i.endswith('__db')], inplace=True)
+
+    #TODO убрать эту строчку после того как придумаю как избавляться от дупликатов в присвоенных тасках
+    if to_create_sprints.empty:
+        return
+
     blank_entities: dict[int, list[int]] = {}
 
     for row in normalized_df.to_dict('records'):
@@ -26,6 +41,7 @@ async def import_sprints_from_file(session: AsyncSession, file_content: bytes) -
         db_sprint = await base_cruds.create_one(session=session, model=Sprint, response_model=SprintOut, data=sprint_data)
         blank_entities[db_sprint.id] = sprint_entities
 
+    #TODO проверять дупликаты
     for sprint_id, entity_ids in blank_entities.items():
         await entities_cruds.create_blank_entities(session=session, sprint_id=sprint_id, entity_ids=entity_ids)
 
