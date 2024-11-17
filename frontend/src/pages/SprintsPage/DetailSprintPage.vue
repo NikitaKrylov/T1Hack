@@ -42,25 +42,33 @@
             </div>
             <div class="taskStatusText">
                 <div class="textMetric">
-                    <p>Cделано</p>
+                    <p>Cделано, Ч/Д</p>
                     <h5>{{ metrix?.sdelano_metric[0] }}</h5>
                     <DonutComp :percentage="metrix?.sdelano_metric[1]" />
                 </div>
                 <div class="textMetric">
-                    <p>Снято</p>
+                    <p>Снято, Ч/Д</p>
                     <h5>{{ metrix?.snyato_metric[0] }}</h5>
                     <DonutComp :percentage="metrix?.snyato_metric[1]" />
                 </div>
                 <div class="textMetric">
-                    <p>В работе</p>
+                    <p>В работе, Ч/Д</p>
                     <h5>{{ metrix?.vrabote_metric[0] }}</h5>
                     <DonutComp :percentage="metrix?.vrabote_metric[1]" />
                 </div>
                 <div class="textMetric">
-                    <p>К выполнению</p>
+                    <p>К выполнению, Ч/Д</p>
                     <h5>{{ metrix?.kvipolneniyu_metric[0] }}</h5>
                     <DonutComp :percentage="metrix?.kvipolneniyu_metric[1]" />
                 </div>
+                <div class="textMetric">
+                    <p>Изменение бэклога</p>
+                    <h5>{{ metrix?.backlogchange_metric[0] }}</h5>
+                    <DonutComp :percentage="metrix?.backlogchange_metric[1]" />
+                </div>
+            </div>
+            <div class="addDeleteMetrics">
+                <Line :data="lineChartData" :options="{ responsive: true, maintainAspectRatio: false }" />
             </div>
         </div>
     </main>
@@ -75,12 +83,17 @@ import api from '@/api/baseApi';
 import CustomIcon from '@/ui/CustomIcon.vue';
 import DateRangeSlider from '@/ui/DateRangeSlider.vue';
 import MainButton from '@/ui/MainButton.vue';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'vue-chartjs';
 
 import { computed, onMounted, reactive, ref, toRaw, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { Line } from 'vue-chartjs';
 import DonutComp from '@/components/DonutComp.vue';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LineElement, PointElement, LinearScale, Title } from 'chart.js';
+
+// Регистрация всех необходимых компонентов
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LineElement, PointElement, LinearScale, Title);
+
 const sprintHealth = computed(() => {
     if (metrix.health > 0 && metrix.health < 33) {
         return 'danger';
@@ -92,7 +105,6 @@ const sprintHealth = computed(() => {
         return 'good';
     }
 })
-ChartJS.register(ArcElement, Tooltip, Legend);
 // Тип для метрик
 interface Metrics {
     KPI_total_tasks: number;
@@ -110,7 +122,7 @@ const route = useRoute();
 
 const sprint = ref<Sprint | null>(null);
 const sprintID = ref<number>(0);
-const startDate = ref<string>(sprint.value?.started_at || '');
+const startDate = ref<string>(sprint.value?.started_at|| '');
 const endDate = ref<string>(sprint.value?.finished_at || '');
 const metrix = reactive<Metrics>({
     KPI_total_tasks: 0,
@@ -120,10 +132,11 @@ const metrix = reactive<Metrics>({
     vrabote_metric: [0, 0],
     snyato_metric: [0, 0],
     kvipolneniyu_metric: [0, 0],
+    dobavleno_chd_sht: [0, 0]
 });
 
 const pieChartData = reactive({
-    labels: ['Выполненные', 'В работе', 'Снято', 'К выполнению'],
+    labels: ['Сделано', 'В работе', 'Снято', 'К выполнению'],
     datasets: [
         {
             label: 'Задачи',
@@ -148,15 +161,46 @@ const pieChartOptions = reactive({
         },
     },
 });
+const lineChartData = computed(() => {
+    const labels: string[] = [];
+    const addedData: number[] = [];
+    const removedData: number[] = [];
+
+    metrix.dobavleno_chd_sht.forEach(([added, removed]: number[], index: number) => {
+        labels.push(`День ${index + 1}`);
+        addedData.push(added);
+        removedData.push(removed);
+    });
+
+    return {
+        labels,
+        datasets: [
+            {
+                label: 'Добавлено',
+                data: addedData,
+                borderColor: '#4caf50',
+                backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                tension: 0.3,
+            },
+            {
+                label: 'Удалено',
+                data: removedData,
+                borderColor: '#f44336',
+                backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                tension: 0.3,
+            },
+        ],
+    };
+});
 
 // Обновление данных для графика
 // Обновление данных для графика при изменении `metrix`
 watch(
     () => ({
-        sdelano_metric: metrix.sdelano_metric[0],
-        vrabote_metric: metrix.vrabote_metric[0],
-        snyato_metric: metrix.snyato_metric[0],
-        kvipolneniyu_metric: metrix.kvipolneniyu_metric[0],
+        sdelano_metric: metrix.sdelano_metric[1],
+        vrabote_metric: metrix.vrabote_metric[1],
+        snyato_metric: metrix.snyato_metric[1],
+        kvipolneniyu_metric: metrix.kvipolneniyu_metric[1],
     }),
     (newMetrix) => {
         // Убедитесь, что метрики имеют значения
@@ -169,6 +213,27 @@ watch(
     },
     { immediate: true }, // сразу применить на начальном этапе
 );
+
+// watch(
+//     () => metrix.dobavleno_chd_sht,
+//     (newData) => {
+//         const labels: string[] = [];
+//         const addedData: any[] = [];
+//         const removedData: any[] = [];
+
+//         newData.forEach(([added, removed]: any, index: number) => {
+//             labels.push(`День ${index + 1}`); // Пример разметки по дням
+//             addedData.push(added);
+//             removedData.push(removed);
+//         });
+
+//         lineChartData.labels = labels;
+//         lineChartData.datasets[0].data = addedData;
+//         lineChartData.datasets[1].data = removedData;
+//     },
+//     { immediate: true }
+// );
+
 // Получение метрик
 const { mutateAsync: getMetrix } = useGetMetrics();
 const handleFetchMetrics = async () => {

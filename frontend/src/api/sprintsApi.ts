@@ -8,8 +8,8 @@ export interface Sprint {
     id: number;
     name: string;
     user_id: number;
-    sprint_status: string;
-    started_at: string;
+    sprint_status: string ;
+    started_at: string ;
     finished_at: string;
 }
 
