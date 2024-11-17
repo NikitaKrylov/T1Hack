@@ -507,6 +507,18 @@ def KPI_completed_tasks(sprint_name: str, df_sprints: pd.DataFrame, df_history: 
     return entity_ids_history['entity_id'].count()
 
 
+def health (sdelano,vipoln,v_rabote,snyato, backlog_change,zablock):
+    w1 = 40 #(Сделано)
+    w2 = 25 #(К выполнению)
+    w3 = 15 #(В работе)
+    w4 = 10 #(Снято)
+    w5 = 5 #(Бэклог изменен)
+    w6 = 5 #(Заблокировано)
+    health = w1 * sdelano + w2 * (1 - vipoln/100) + w3 * (1 - v_rabote/100) + w4 * (1 - snyato/100) + w5 * (1 - backlog_change/100) + w6 * (1 - zablock/100)
+
+    health = min(100, max(0, health))
+    return health
+
 async def get_sprint_metrics(session: AsyncSession, sprint_id: int, first_date: datetime.date,
                              second_date: datetime.date):
     sprint = await base_cruds.get_one_or_none_by_id(session=session, model=Sprint, response_model=SprintOut,
@@ -577,6 +589,9 @@ async def get_sprint_metrics(session: AsyncSession, sprint_id: int, first_date: 
         second_date=second_date
     )
 
+    _health = health(
+        sdelano=_sdelano_metric[1], vipoln=_kvipolneniyu_metric[1], v_rabote=_vrabote_metric[1], snyato=_snyato_metric[1], backlog_change=_backlogchange_metric[1], zablock=_blockedtasksCHD_metric[1]
+    )
 
     result = {
         'dobavleno_chd_sht': _dobavleno_chd_sht,
@@ -588,7 +603,8 @@ async def get_sprint_metrics(session: AsyncSession, sprint_id: int, first_date: 
         'backlogchange_metric': _backlogchange_metric,
         'not_completed_tasks_at_day': _not_completed_tasks_at_day,
         'KPI_total_tasks': _KPI_total_tasks,
-        'KPI_completed_tasks': int(_KPI_completed_tasks)
+        'KPI_completed_tasks': int(_KPI_completed_tasks),
+        'health': _health
     }
 
     return result
