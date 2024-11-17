@@ -56,7 +56,7 @@ const handleLogin = async () => {
         if (response && response.access_token) {
             setCookie('token', response.access_token, 12);
             fetchError.value = '';
-            router.push('/home');
+            router.push('/sprints');
         }
     } catch (error: any) {
         fetchError.value = error?.response?.data?.detail || 'Произошла ошибка при входе';

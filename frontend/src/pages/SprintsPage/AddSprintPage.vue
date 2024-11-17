@@ -34,7 +34,9 @@
             </div>
         </div>
 
-        <div class="vp"></div>
+        <div class="vp">
+            <img src="/img/rightC.svg" />
+        </div>
     </main>
 </template>
 <script setup lang="ts">
@@ -219,10 +221,15 @@ const stopSendFiles = () => {
         height: 100%;
         padding: 40px;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+        justify-content: center;
         gap: 52px;
         border-radius: 16px;
         background: var(--White-100, #fff);
+        img{
+            width: auto;
+            height: 100%;
+        }
     }
 }
 </style>

@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/vue-query';
+import { useMutation, useQuery } from '@tanstack/vue-query';
 import api from './baseApi';
 
 // UserResponse and Sprint types
@@ -57,6 +57,22 @@ export const useGetSprints = () => {
     return useMutation<Sprint[], Error>({
         mutationFn: () => {
             return api.post('/sprints/list').then((res) => res.data);
+        },
+    });
+};
+
+export const useGetSprint = (id:number) => {
+    return useQuery<Sprint, Error>({
+        queryKey: ['sprint', id],
+        queryFn: () => api.get<Sprint>(`/sprints/${id}`).then((res) => res.data),
+        enabled: !!id,
+    });
+};
+
+export const useGetMetrics = () => {
+    return useMutation<UserResponse, Error, { sprint_id: number, first_date: string, second_date: string }>({
+        mutationFn: (body) => {
+            return api.post('/metrix', body).then((res) => res.data);
         },
     });
 };
