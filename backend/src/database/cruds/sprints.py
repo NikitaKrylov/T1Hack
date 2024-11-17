@@ -8,6 +8,9 @@ async def get_entity_id_with_sprints(session: AsyncSession):
     query = (
         select(
             Sprint.name,
+            Sprint.sprint_status,
+            Sprint.started_at,
+            Sprint.finished_at,
             Entity.entity_id
         )
         .select_from(Entity)

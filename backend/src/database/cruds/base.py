@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from sqlalchemy import select, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.database.db import Base
-from src.schemas.filters import PagingFilter
+from src.schemas.filters import PagingFilter, BaseFilter
 
 
 async def create_one[T: Base, V: BaseModel](session: AsyncSession, model: Type[T], data: BaseModel, response_model: Type[V] | None, **extra_data) -> V | None:
@@ -36,10 +36,13 @@ async def delete_by_id[T: Base](session: AsyncSession, model: Type[T], _id: int)
     await session.commit()
 
 
-async def get_all[T: Base, V: BaseModel](session: AsyncSession, model: Type[T], response_model: Type[V], paging: PagingFilter | None = None) -> list[V]:
+async def get_all[T: Base, V: BaseModel](session: AsyncSession, model: Type[T], response_model: Type[V], paging: PagingFilter | None = None, content_filter: BaseFilter | None = None) -> list[V]:
     query = select(model)
     if paging:
         query = paging(query)
+
+    if content_filter:
+        query = content_filter(query)
 
     result = await session.execute(query)
     return [response_model.model_validate(i, from_attributes=True) for i in result.scalars()]

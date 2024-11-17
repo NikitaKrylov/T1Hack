@@ -1,12 +1,12 @@
 from abc import ABC
 from datetime import date
-
+from src.database.models import EntityChanging
 from pydantic import BaseModel
 
 class BaseFilter(ABC):
 
     def __call__(self, query, *args, **kwargs):
-        raise NotImplementedError
+        return query
 
 
 class PagingFilter(BaseFilter, BaseModel):
@@ -23,10 +23,24 @@ class PagingFilter(BaseFilter, BaseModel):
         return query
 
 
-class DateIntervalFilter(BaseFilter, BaseModel):
-    from_date: date
-    to_date: date
+class HistoryDateIntervalFilter(BaseFilter, BaseModel):
+    from_date: date | None = None
+    to_date: date | None = None
 
-    # def __call__(self, query, *args, **kwargs):
+    def __call__(self, query, *args, **kwargs):
+        query = super().__call__(query, *args, **kwargs)
+
+        if self.from_date:
+            query = query.where(EntityChanging.date >= self.from_date)
+
+        if self.to_date:
+            query = query.where(EntityChanging.date <= self.to_date)
+
+        return query
+
+
+class EntityHistoryFilter(HistoryDateIntervalFilter):
+    pass
+
 
 
