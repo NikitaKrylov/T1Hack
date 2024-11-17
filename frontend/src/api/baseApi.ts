@@ -6,7 +6,7 @@ const api = axios.create({
 })
 
 api.interceptors.request.use(config => {
-  const token = getCookie('authToken') // Или другая логика получения токена
+  const token = getCookie('token') // Или другая логика получения токена
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`
   }

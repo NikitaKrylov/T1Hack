@@ -1,7 +1,7 @@
 <template>
     <button :class="buttonClass">
-        <p>{{ text }}</p>
-        <CustomIcon v-if="icon" :id="icon" :width="24" :height="24"/>
+        <p v-if="text">{{ text }}</p>
+        <CustomIcon v-if="icon" :id="icon" :width="16" :height="16"/>
     </button>
 </template>
 
@@ -12,13 +12,13 @@ defineOptions({
 import { computed } from 'vue';
 import CustomIcon from './CustomIcon.vue';
 
-const { type = 'primary', size = 'l' } = defineProps<{ text: string; type?: 'primary' | 'secondary' | 'third'; size?: 's' | 'm' | 'l'; icon?: string  }>();
+const { type = 'primary', size = 'l' } = defineProps<{ text?: string; type?: 'primary' | 'secondary' | 'third'; size?: 's' | 'm' | 'l'; icon?: string  }>();
 
 const buttonClass = computed(() => ['btn', { 'btn--primary': type === 'primary' }, { 'btn--secondary': type === 'secondary' }, {'btn--third': type === 'third'}, { 'btn--small': size === 's', 'btn--medium': size === 'm', 'btn--large': size === 'l' }]);
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .btn {
     display: flex;
     width: 320px;

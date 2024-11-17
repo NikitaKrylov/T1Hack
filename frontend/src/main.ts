@@ -10,24 +10,24 @@ import ErrorPage from './pages/ErrorPage.vue';
 import AiChatPage from './pages/AiChatPage/AiChatPage.vue';
 import SettingsPage from './pages/SettingsPage/SettingsPage.vue';
 import LoginPage from './pages/LoginPage/LoginPage.vue';
-import HomePage from './pages/HomePage/HomePage.vue';
-import WorkersPage from './pages/WorkersPage/WorkersPage.vue';
+import TeamsPage from './pages/TeamsPage/TeamsPage.vue';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 import SprintsPage from './pages/SprintsPage/SprintsPage.vue';
 import path from 'path';
 import AddSprintPage from './pages/SprintsPage/AddSprintPage.vue';
+import DetailSprintPage from './pages/SprintsPage/DetailSprintPage.vue';
 
 const routes = [
     { path: '/:catchAll(.*)', component: ErrorPage },
     { path: '/login', component: LoginPage },
-    { path: '/home', component: MainLayout, children: [{ path: '', component: HomePage }] },
     {
-        path: '/workers',
+        path: '/teams',
         component: MainLayout,
-        children: [{ path: '', component: WorkersPage }],
+        children: [{ path: '', component: TeamsPage }],
     },
     { path: '/sprints', component: MainLayout, children: [{ path: '', component: SprintsPage }] },
     { path: '/sprints/add', component: MainLayout, children: [{ path: '', component: AddSprintPage }] },
+    { path: '/sprints/:id', component: MainLayout, children: [{ path: '', component: DetailSprintPage }] },
    
     // { path: '/ai_chat', component: MainLayout, children: [{ path: '', component: AiChatPage }] },
     // { path: '/settings', component: MainLayout, children: [{ path: '', component: SettingsPage }] },
