@@ -1,7 +1,5 @@
 from fastapi import APIRouter, File, UploadFile, Depends
-
 from fastapi import APIRouter
-
 from src.schemas.entities import EntityOut
 from src.schemas.filters import PagingFilter
 from src.services import entities as service
