@@ -1,9 +1,9 @@
 <template>
     <div class="load" v-if="isLoading">
-        <CustomIcon id="logo" :width="207" :height="33" className="logo" />
-        <h1 v-if="isLoading && userStore.user">
-            Привет, <span>{{ userStore.user?.first_name }}</span>
-        </h1>
+        <CustomIcon id="logo" :width="400" :height="128" className="logo" />
+        <div v-if="isLoading" class="loader">
+            <div class="spinner"></div>
+        </div>
     </div>
     <div class="mainLayout" v-else-if="!isLoading">
         <MenuComp v-if="!isAiChat" />
@@ -20,21 +20,15 @@ defineOptions({
     name: 'MainLayout',
 });
 import CustomIcon from '@/ui/CustomIcon.vue';
-import { computed, onMounted, ref, toRaw, watch } from 'vue';
-import { Doctor, Folder, Patient, useUserStore } from '@/store/useUserStore';
-import { useRoute, useRouter } from 'vue-router';
+import { computed, onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import MenuComp from '@/components/MenuComp.vue';
-import { useRoleStore } from '@/store/useRoleStore';
 import { useScansStore } from '@/store/useScansStore';
 const route = useRoute();
-const isChats = computed(() => route.path.includes('chats'));
 const isAiChat = computed(() => route.path.includes('ai_chat'));
-const applyStyle = computed(() => !route.path.includes('chats') && !route.path.includes('ai_chat'));
 
-const userStore = useUserStore();
 const isLoading = ref(true);
-const router = useRouter();
-const roleStore = useRoleStore();
+
 const errorTxt = ref<string | null>(null);
 const scansStore = useScansStore();
 
@@ -46,8 +40,7 @@ watch(
     { immediate: true },
 );
 
-onMounted(async () => {
-});
+onMounted(async () => {});
 
 const goBack = () => {
     window.history.back();
@@ -55,58 +48,55 @@ const goBack = () => {
 onMounted(() => {
     setTimeout(() => {
         isLoading.value = false;
-    }, 3000);
+    }, 2000);
 });
 </script>
 
 <style lang="scss" scoped>
 .mainLayout {
-    padding: 0; 
+    padding: 0;
     width: 100%;
     height: 100dvh;
     display: flex;
     flex-direction: row;
-    gap:20px;
+    gap: 20px;
     align-items: center;
-    
+
     padding: 40px;
-    background-color: #F0F2F0;
+    background-color: #f0f2f0;
 }
 .load {
-    width: 100%;
-    padding-top: 36px;
     display: flex;
     flex-direction: column;
+    gap:30px;
     align-items: center;
+    justify-content: center;
+    width: 100%;
     height: 100dvh;
-    .logo {
-        position: relative;
-        width: 207px;
-        height: 33px;
-        z-index: 6;
-    }
-
-    h1 {
-        margin-top: 209px;
-        color: var(--Text, #1d1d1d);
-        font-family: var(--font-main);
-        font-size: 36px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-
-        // Анимация всплытия
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeUp 0.8s ease-out forwards;
-
-        span {
-            display: inline-block;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeUp 0.8s ease-out forwards;
-            animation-delay: 0.4s; // Задержка для анимации span
+    .loader {
+        height: 200px;
+        width: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000; /* Поверх всего */
+        .spinner {
+            width: 100px;
+            height: 100px;
+            border: 10px solid transparent;
+            border-top: 10px solid #45a3fa; /* Цвет загрузчика */
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
     }
 }
 .error {

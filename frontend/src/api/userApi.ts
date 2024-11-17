@@ -1,6 +1,5 @@
 import { useQuery, useMutation } from '@tanstack/vue-query';
 import api from './baseApi';
-import queryClient from './queryClient';
 
 interface UserData {
     access_token:string

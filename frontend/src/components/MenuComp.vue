@@ -2,19 +2,18 @@
     <div class="sideBar">
         <div class="topPart">
             <div class="logo">
-                <CustomIcon id="logo" :width="207" :height="33" className="logo" />
+                <CustomIcon id="logo" :width="200" :height="64" className="logo" />
             </div>
             <nav class="menu">
-                <CustomMenuLink :to="`/home`" icon="home" text="Главная" />
-                <CustomMenuLink :to="`/projects`" icon="projects" text="Проекты" />
                 <CustomMenuLink :to="`/sprints`" icon="sprints" text="Спринты" />
+                <CustomMenuLink :to="`/projects`" icon="projects" text="Проекты" />
                 <CustomMenuLink :to="`/teams`" icon="workers" text="Команды" />
             </nav>
         </div>
         <div class="profile" @click="router.push('/profile')">
-            <div class="avatar">TU</div>
+            <img src="/img/profile.png"/>
             <div class="profileInfo">
-                <h4>Тестовый юзер</h4>
+                <h4>Тычинин Андрей</h4>
                 <p>Администратор</p>
             </div>
         </div>
