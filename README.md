@@ -4,10 +4,7 @@
 
   <h3 align="center">MISIS 52</h3>
   <p align="center">
-    <a href="https://disk.yandex.ru/i/t0TaaEokOw07Iw"><strong>Презентация »</strong></a>
-    <br />
-    <a href="https://open-your-smolensk.ru/"><strong>Попробовать »</strong></a>
-    <br />
+    <a href="https://misis52.ru/"><strong>Попробовать »</strong></a>
     </p>
 </div>
 
