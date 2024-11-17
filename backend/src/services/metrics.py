@@ -514,7 +514,7 @@ def health (sdelano,vipoln,v_rabote,snyato, backlog_change,zablock):
     w4 = 10 #(Снято)
     w5 = 5 #(Бэклог изменен)
     w6 = 5 #(Заблокировано)
-    health = w1 * sdelano + w2 * (1 - vipoln/100) + w3 * (1 - v_rabote/100) + w4 * (1 - snyato/100) + w5 * (1 - backlog_change/100) + w6 * (1 - zablock/500)
+    health = w1 * sdelano + w2 * (1 - vipoln/100) + w3 * (1 - v_rabote/100) + w4 * (1 - snyato/100) + w5 * (1 - backlog_change/100) + w6 * (1 - zablock/100)
 
     health = min(100, max(0, health))
     return health
