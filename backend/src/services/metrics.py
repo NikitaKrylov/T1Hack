@@ -87,7 +87,7 @@ def kvipolneniyu_metric(sprint_name: str, df_sprints: pd.DataFrame, df_tasks: pd
     total_estimation = df_tasks[df_tasks['entity_id'].isin(total_ids)]['estimation'].sum() / 3600
 
     # Return the final metric
-    return (created_estimation / total_estimation) * 100
+    return round(created_estimation, 1), round((created_estimation / total_estimation) * 100, 1)
 
 
 # В работе
@@ -160,7 +160,7 @@ def vrabote_metric(sprint_name: str, df_sprints: pd.DataFrame, df_tasks: pd.Data
     total_estimation = df_tasks[df_tasks['entity_id'].isin(total_ids)]['estimation'].sum() / 3600
 
     # Возвращаем итоговую метрику в %
-    return (mot_closed / total_estimation) * 100
+    return round(mot_closed, 1), round((mot_closed / total_estimation) * 100, 1)
 
 
 # Сделано
@@ -208,7 +208,7 @@ def sdelano_metric(sprint_name: str, df_sprints: pd.DataFrame, df_tasks: pd.Data
     all_estimation = df_tasks[df_tasks["entity_id"].isin(main_list)]["estimation"].sum() / 3600
 
     # Возвращаем итоговую метрику в процентах
-    return (created_done / all_estimation) * 100
+    return round(created_done, 1), round((created_done / all_estimation) * 100, 1)
 
 
 # Снято
@@ -289,7 +289,7 @@ def snyato_metric(sprint_name: str, df_sprints: pd.DataFrame, df_tasks: pd.DataF
     all_estimation = df_tasks[df_tasks['entity_id'].isin(entity_ids)]['estimation'].sum() / 3600
 
     # Возвращаем итоговую метрику в процентах
-    return (created_done / all_estimation) * 100
+    return round(created_done, 1), round((created_done / all_estimation) * 100, 1)
 
 
 # Заблокировано
@@ -474,7 +474,7 @@ def backlogchange_metric(sprint_name: str, df_sprints: pd.DataFrame, df_tasks: p
     ids = df_tasks[df_tasks['entity_id'].isin(int(x) for x in ids)]['estimation'].sum() / 3600
 
     # возвращаю итоговую метрику в %
-    return round(day_last / ids * 100, 1)
+    return round(day_last, 1), round(day_last / ids * 100, 1)
 
 
 def not_completed_tasks_at_day(sprint_name: str, df_sprints: pd.DataFrame, df_history: pd.DataFrame, first_date: datetime.date, second_date: datetime.date):
@@ -581,11 +581,11 @@ async def get_sprint_metrics(session: AsyncSession, sprint_id: int, first_date: 
     result = {
         'dobavleno_chd_sht': _dobavleno_chd_sht,
         'blockedtasksCHD_metric': float(_blockedtasksCHD_metric),
-        'snyato_metric': float(_snyato_metric),
-        'sdelano_metric': float(_sdelano_metric),
-        'vrabote_metric': float(_vrabote_metric),
-        'kvipolneniyu_metric': float(_kvipolneniyu_metric),
-        'backlogchange_metric': float(_backlogchange_metric) if not np.isnan(_backlogchange_metric) else None,
+        'snyato_metric': _snyato_metric,
+        'sdelano_metric': _sdelano_metric,
+        'vrabote_metric': _vrabote_metric,
+        'kvipolneniyu_metric': _kvipolneniyu_metric,
+        'backlogchange_metric': _backlogchange_metric,
         'not_completed_tasks_at_day': _not_completed_tasks_at_day,
         'KPI_total_tasks': _KPI_total_tasks,
         'KPI_completed_tasks': int(_KPI_completed_tasks)
