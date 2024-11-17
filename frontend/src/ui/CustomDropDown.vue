@@ -1,10 +1,7 @@
 <template>
     <div class="custom-select">
-        <div class="labelWrapper">
-            <label>{{ text }}</label>
-        </div>
         <div class="custom-dropdown" @click="toggleDropdown">
-            <div class="selected">{{ modelValue || placeholder }}</div>
+            <div class="selected">{{ modelValue  }}</div>
             <div v-if="isOpen" class="options">
                 <div v-for="option in options" :key="option" class="option" @click.stop="selectOption(option)">
                     {{ option }}
@@ -19,9 +16,8 @@
 import { ref, defineEmits, defineProps, watch } from 'vue';
 import CustomIcon from './CustomIcon.vue';
 
-const props = defineProps<{
+const {modelValue = 'Все команды'} = defineProps<{
     options: string[]; // Убедитесь, что это строковый массив
-    placeholder: string;
     modelValue: string;
     text: string;
 }>();

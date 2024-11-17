@@ -3,7 +3,7 @@ import App from './App.vue';
 import { createWebHistory, createRouter } from 'vue-router';
 import queryClient from './api/queryClient';
 import { createPinia } from 'pinia';
-
+import HighchartsVue from 'highcharts-vue'
 import MainLayout from './layouts/MainLayout.vue';
 import ErrorPage from './pages/ErrorPage.vue';
 
@@ -60,4 +60,4 @@ const router = createRouter({
 // });
 const pinia = createPinia();
 
-createApp(App).use(pinia).use(VueQueryPlugin, { queryClient }).use(router).mount('#app');
+createApp(App).use(HighchartsVue).use(pinia).use(VueQueryPlugin, { queryClient }).use(router).mount('#app');
