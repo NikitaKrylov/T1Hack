@@ -497,6 +497,15 @@ def KPI_total_tasks(sprint_name: str, df_sprints: pd.DataFrame, df_history: pd.D
     entity_ids = entity_ids_in_date[entity_ids_in_date.isin(entity_ids_for_sprint)]
     return len(entity_ids)
 
+ # KPI Выполнено задач (2)
+def KPI_completed_tasks(sprint_name: str, df_sprints: pd.DataFrame, df_history: pd.DataFrame, first_date: datetime.date, second_date: datetime.date):
+    entity_ids = df_sprints[df_sprints["name"] == sprint_name].entity_id.to_list()
+    entity_ids_history = df_history[(df_history['entity_id'].isin(entity_ids)) & \
+                                    (df_history['date'].dt.date >= first_date) & (df_history['date'].dt.date <= second_date) & \
+                                    (df_history['property_name'] == 'Статус') & \
+                                    (df_history['history_change_after'] == 'closed')].drop_duplicates(subset=['entity_id'])
+    return entity_ids_history['entity_id'].count()
+
 
 async def get_sprint_metrics(session: AsyncSession, sprint_id: int, first_date: datetime.date,
                              second_date: datetime.date):
@@ -550,8 +559,6 @@ async def get_sprint_metrics(session: AsyncSession, sprint_id: int, first_date: 
         second_date=second_date
     )
 
-    start_time = datetime.datetime.now()
-
     _not_completed_tasks_at_day = not_completed_tasks_at_day(
         sprint_name=sprint.name,
         df_sprints=all_sprints_df,
@@ -559,9 +566,14 @@ async def get_sprint_metrics(session: AsyncSession, sprint_id: int, first_date: 
         first_date=first_date,
         second_date=second_date
     )
-    end_time = datetime.datetime.now()
-    print(end_time - start_time)
 
+    _KPI_completed_tasks = KPI_completed_tasks(
+        sprint_name=sprint.name,
+        df_sprints=all_sprints_df,
+        df_history=all_history_df,
+        first_date=first_date,
+        second_date=second_date
+    )
 
 
     result = {
@@ -573,47 +585,10 @@ async def get_sprint_metrics(session: AsyncSession, sprint_id: int, first_date: 
         'kvipolneniyu_metric': float(_kvipolneniyu_metric),
         'backlogchange_metric': float(_backlogchange_metric) if not np.isnan(_backlogchange_metric) else None,
         'not_completed_tasks_at_day': _not_completed_tasks_at_day,
-        'KPI_total_tasks': _KPI_total_tasks
+        'KPI_total_tasks': _KPI_total_tasks,
+        'KPI_completed_tasks': int(_KPI_completed_tasks)
     }
 
     return result
 
 
-async def get_blockedtasksCHD_metricx(session: AsyncSession, sprint_id: int, first_date: datetime.date,
-                                      second_date: datetime.date):
-    first_time = datetime.datetime.now()
-
-    sprint = await base_cruds.get_one_or_none_by_id(session=session, model=Sprint, response_model=SprintOut,
-                                                    _id=sprint_id)
-
-    if not sprint:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, f'Спринт с id({sprint_id}) не найден')
-
-    all_sprints = await get_entity_id_with_sprints(session=session)
-    all_sprints_df = pd.DataFrame(all_sprints)
-
-    all_history = await get_entity_histories(session=session)
-    all_history_df = pd.DataFrame([i.model_dump() for i in all_history])
-    all_history_df['date'] = all_history_df['date'].dt.date
-    all_history_df.dropna(inplace=True)
-
-    all_tasks = await get_entities_list(session)
-    all_tasks_df = pd.DataFrame([i.model_dump() for i in all_tasks])
-
-    second_time = datetime.datetime.now()
-
-    result = kvipolneniyu_metric(
-        sprint_name=sprint.name,
-        df_sprints=all_sprints_df,
-        df_tasks=all_tasks_df,
-        df_history=all_history_df,
-        first_date=first_date,
-        second_date=second_date
-    )
-
-    third_time = datetime.datetime.now()
-
-    print(f'Get data: {second_time - first_time}')
-    print(f'Run metric: {third_time - second_time}')
-
-    return result
