@@ -590,7 +590,7 @@ async def get_sprint_metrics(session: AsyncSession, sprint_id: int, first_date: 
     )
 
     _health = health(
-        sdelano=_sdelano_metric[1], vipoln=_kvipolneniyu_metric[1], v_rabote=_vrabote_metric[1], snyato=_snyato_metric[1], backlog_change=_backlogchange_metric[1], zablock=_blockedtasksCHD_metric[1]
+        sdelano=_sdelano_metric[1], vipoln=_kvipolneniyu_metric[1], v_rabote=_vrabote_metric[1], snyato=_snyato_metric[1], backlog_change=_backlogchange_metric[1], zablock=_blockedtasksCHD_metric
     )
 
     result = {
