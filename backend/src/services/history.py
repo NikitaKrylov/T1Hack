@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 import pandas as pd
 from src.database.cruds import base as base_cruds
 from src.database.models import EntityChanging
-from src.schemas.filters import PagingFilter
+from src.schemas.filters import PagingFilter, EntityHistoryFilter
 from src.schemas.history import HistoryOut, HistoryCreate
 from src.services.base import file_to_pandas_dataframe
 
@@ -32,8 +32,8 @@ async def process_history(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-async def get_entity_histories(session: AsyncSession, paging: PagingFilter | None = None) -> list[HistoryOut]:
-    return await base_cruds.get_all(session=session, model=EntityChanging, response_model=HistoryOut, paging=paging)
+async def get_entity_histories(session: AsyncSession, paging: PagingFilter | None = None, filters: EntityHistoryFilter | None = None) -> list[HistoryOut]:
+    return await base_cruds.get_all(session=session, model=EntityChanging, response_model=HistoryOut, paging=paging, content_filter=filters)
 
 
 async def create_history_changings(session: AsyncSession, items: list[HistoryCreate]) -> None:

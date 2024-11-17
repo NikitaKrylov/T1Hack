@@ -13,7 +13,7 @@ router = APIRouter(
 
 
 @router.post('/list', response_model=list[SprintOut])
-async def get_sprints_list(paging: PagingFilter, session=Depends(get_async_session)):
+async def get_sprints_list(paging: PagingFilter | None = None, session=Depends(get_async_session)):
     return await service.get_sprints_list(session=session, paging=paging)
 
 

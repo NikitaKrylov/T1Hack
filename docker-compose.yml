@@ -49,6 +49,18 @@ services:
       context: ./backend
       dockerfile: backend.dockerfile
 
+  redis-cache:
+    container_name: redis_cache
+    image: redis:latest
+    restart: unless-stopped
+    env_file:
+      - redis.env
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redisdata:/root/redis
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+
 volumes:
   caddy_data:
   caddy_config:

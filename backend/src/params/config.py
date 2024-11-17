@@ -10,6 +10,8 @@ class Config(BaseSettings):
     dbname: str
     dbport: int
     mode: str
+    redisport: int
+    redishost: str
 
     @property
     def is_prod(self) -> bool:
@@ -18,6 +20,10 @@ class Config(BaseSettings):
     @property
     def db_url(self) -> str:
         return f'postgresql+asyncpg://{self.dbuser}:{self.dbpassword}@{self.dbhost}:{self.dbport}/{self.dbname}'
+
+    @property
+    def redis_url(self) -> str:
+        return f'redis://{self.redishost}:{self.redisport}'
 
     @property
     def time_zone_ino(self) -> tzinfo:
