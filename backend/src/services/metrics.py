@@ -417,7 +417,7 @@ def dobavleno_chd_sht(sprint_name: str, df_sprints: pd.DataFrame, df_tasks: pd.D
             status_df = filtered_df[
                 (filtered_df['property_name'] == "Спринт") & (filtered_df["entity_id"] == i)]
             if not status_df.empty:
-                max_version_row = status_df.loc[status_df['history_version'].idxmax()]
+                max_version_row = status_df.loc[status_df['version'].idxmax()]
                 history_change = max_version_row['history_change']
                 if sprint_name not in history_change.split(" -> ")[1].strip():
                     all_changes_del.add(i)
@@ -523,10 +523,12 @@ async def get_sprint_metrics(session: AsyncSession, sprint_id: int, first_date: 
     all_history_df['date'] = all_history_df['date'].dt.date
     all_history_df[['history_change_before', 'history_change_after']] = all_history_df['history_change'].str.split(' -> ', n=1, expand=True)
     # df_history_split = df_history.drop(columns={'history_change'})
-    all_history_df.dropna(inplace=True)
+    # all_history_df.dropna(inplace=True)
 
     all_tasks = await get_entities_list(session)
     all_tasks_df = pd.DataFrame([i.model_dump() for i in all_tasks])
+    all_tasks_df = all_tasks_df.drop_duplicates(subset=[col for col in all_tasks_df.columns if col not in ["sprint_id", "id"]],ignore_index=True)
+
 
     metrics_data = {
         'sprint_name': sprint.name,
